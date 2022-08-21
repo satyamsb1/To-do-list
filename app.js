@@ -2,37 +2,59 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
-var items=["Buy Food",
+let items=["Buy Food",
 "Cook Food",
 "Eat Food"];
+let workItems=[];
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
 
 app.get("/", function(req, res)
 {
-    var today = new Date();
+    let today = new Date();
     
-    var options = {
+    let options = {
         weekday : "long",
         day : "numeric",
         month : "long"
     };
 
-    var day = today.toLocaleDateString("en-US", options);
-    res.render("list", {kindOfDay : day, newChores: items}); 
+    let day = today.toLocaleDateString("en-US", options);
+    res.render("list", {listTitle : day, newChores: items}); 
     
 });
 
 app.post("/", (req, res) =>
 {
     item = req.body.newItem;
-
-    items.push(item); 
-
-    res.redirect("/")
+    if(req.body.list=== "Work")
+    {
+        workItems.push(item);
+        res.redirect("/work");   
+    }
+    else
+    {
+        items.push(item); 
+        res.redirect("/");
+    }
+   
 });
+
+app.get("/work", (req, res)=>
+{
+    res.render("list", {listTitle:"Work List", newChores: workItems});
+});
+
+app.post("/work", function(req, res)
+{
+    let item = req.body.newItem;
+    workItems.push(item);
+    res.redirect("/work");
+});
+
 
 app.listen(3000, function()
 {
