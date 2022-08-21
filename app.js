@@ -2,10 +2,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
-let items=["Buy Food",
+const date =  require(__dirname + "/date.js");
+
+
+const items=["Buy Food",  //in js we can push elements in array but cannot assign new values 
+                        // to  them
 "Cook Food",
 "Eat Food"];
-let workItems=[];
+const workItems=[];
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
@@ -14,17 +18,8 @@ app.set('view engine', 'ejs');
 
 app.get("/", function(req, res)
 {
-    let today = new Date();
-    
-    let options = {
-        weekday : "long",
-        day : "numeric",
-        month : "long"
-    };
-
-    let day = today.toLocaleDateString("en-US", options);
-    res.render("list", {listTitle : day, newChores: items}); 
-    
+    const day =date.getDay();
+    res.render("list", {listTitle : day, newChores: items});   
 });
 
 app.post("/", (req, res) =>
@@ -39,8 +34,7 @@ app.post("/", (req, res) =>
     {
         items.push(item); 
         res.redirect("/");
-    }
-   
+    }  
 });
 
 app.get("/work", (req, res)=>
@@ -50,7 +44,7 @@ app.get("/work", (req, res)=>
 
 app.post("/work", function(req, res)
 {
-    let item = req.body.newItem;
+    const item = req.body.newItem;
     workItems.push(item);
     res.redirect("/work");
 });
