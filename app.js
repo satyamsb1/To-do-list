@@ -8,7 +8,7 @@ const date =  require(__dirname + "/date.js");
 const items=["Buy Food",  //in js we can push elements in array but cannot assign new values 
                         // to  them
 "Cook Food",
-"Eat Food"];
+"Eat Food"];    
 const workItems=[];
 
 app.use(bodyParser.urlencoded({extended: true}));
